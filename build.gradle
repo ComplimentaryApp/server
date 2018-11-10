@@ -15,6 +15,10 @@ plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.3.0'
 }
 
+//bootRepackage {
+//    mainClass='de.complimentaryapp.server.ApplicationKt'
+//}
+
 apply plugin: 'kotlin' // Required for Kotlin integration
 apply plugin: "kotlin-spring" // See https://kotlinlang.org/docs/reference/compiler-plugins.html#kotlin-spring-compiler-plugin
 apply plugin: 'org.springframework.boot'
@@ -61,3 +65,5 @@ configurations {
 dependencies {
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 }
+
+//task stage(dependsOn: ['installDist'])
