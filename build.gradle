@@ -66,4 +66,16 @@ dependencies {
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 }
 
-//task stage(dependsOn: ['installDist'])
+bootRun {
+    main = 'de.complimentaryapp.server.ApplicationKt'
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'de.complimentaryapp.server.ApplicationKt'
+    }
+}
+
+task stage {
+    dependsOn build
+}
