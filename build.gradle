@@ -36,8 +36,8 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version" // Required for Kotlin integration
     compile 'org.springframework.boot:spring-boot-starter-web'
     compile 'org.jetbrains.exposed:exposed:0.11.2'
-    compile group: 'org.xerial', name: 'sqlite-jdbc', version: '3.25.2'
-    testCompile('org.springframework.boot:spring-boot-starter-test')
+    compile 'org.postgresql:postgresql:42.2.4.jre7'
+//    testCompile('org.springframework.boot:spring-boot-starter-test')
 }
 version '1.0-SNAPSHOT'
 

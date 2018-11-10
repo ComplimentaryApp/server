@@ -12,8 +12,8 @@ object DatabaseController {
 
     private fun connect() {
         if (connected) return
-        Database.connect("jdbc:sqlite:database.sqlite", "org.sqlite.JDBC")
-            .connector().createStatement().execute("PRAGMA foreign_keys = ON")
+        Database.connect(System.getenv("JDBC_DATABASE_URL"), "org.postgresql.Driver",
+            user = System.getenv("JDBC_DATABASE_USERNAME"), password = System.getenv("JDBC_DATABASE_PASSWORD"))
         TransactionManager.manager.defaultIsolationLevel = Connection.TRANSACTION_SERIALIZABLE
 
         connected = true
