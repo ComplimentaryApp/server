@@ -7,5 +7,5 @@ object Compliments : Table() {
     val author = reference("author", Users.id)
     val subject = reference("subject", Users.id)
     val body = text("body")
-    val liked = bool("liked")
+    val liked = bool("liked").default(false)
 }

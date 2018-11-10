@@ -2,9 +2,11 @@ package de.complimentaryapp.server
 
 import de.complimentaryapp.server.Sessions.TOKEN_LENGTH
 import org.jetbrains.exposed.exceptions.ExposedSQLException
+import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import java.lang.RuntimeException
@@ -16,7 +18,7 @@ class SessionController {
 
     @PostMapping("/login")
     fun login(@RequestParam username: String): String {
-        if (!checkUser(username)) throw RuntimeException("Bad username")
+        if (!Users.checkUser(username)) throw RuntimeException("Bad username")
         while (true) {
             val token = token()
             println(token)
@@ -37,19 +39,17 @@ class SessionController {
         }
     }
 
+    @PostMapping("/logout")
+    fun logout(@RequestHeader(name = "Token") token: String) {
+        val user = Sessions.checkToken(token) ?: throw RuntimeException("No/Bad token provided")
+        DatabaseController.call {
+            Sessions.deleteWhere { Sessions.token eq token }
+        }
+    }
+
     private fun token(): String {
         val random = SecureRandom()
         val source = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890"
         return random.ints(TOKEN_LENGTH.toLong(), 0, source.length).asSequence().map { source[it] }.joinToString("")
-    }
-
-    private fun checkUser(id: String): Boolean {
-        return DatabaseController.call { Users.select { Users.id eq id }.count() != 0 }
-    }
-
-    private fun checkToken(token: String): String? {
-        return DatabaseController.call {
-            Sessions.select { Sessions.token eq token }.limit(1).firstOrNull()?.get(Sessions.user)
-        }
     }
 }
