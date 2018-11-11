@@ -6,7 +6,7 @@ import org.jetbrains.exposed.sql.select
 import org.springframework.web.bind.annotation.*
 import java.lang.RuntimeException
 
-data class Compliment(val subject: String, val body: String, val liked: Boolean) {
+data class Compliment(val subject: String?, val body: String, val liked: Boolean) {
 }
 
 @RestController
@@ -31,7 +31,7 @@ class ComplimentController {
         val user = token?.let { Sessions.checkToken(it) } ?: throw RuntimeException("No/Bad token provided")
         return DatabaseController.call {
             Compliments.select { Compliments.subject eq user }
-                .map { Compliment(it[Compliments.author], it[Compliments.author], it[Compliments.liked]) }
+                .map { Compliment(it[Compliments.author], it[Compliments.body], it[Compliments.liked]) }
         }
     }
 }
