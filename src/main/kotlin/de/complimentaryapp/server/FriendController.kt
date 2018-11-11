@@ -12,6 +12,7 @@ class FriendController {
     @PostMapping("/friends")
     fun addFriend(@RequestParam subject: String, @RequestHeader(name = "Token") token: String?) {
         val user = token?.let { Sessions.checkToken(it) } ?: throw RuntimeException("No/Bad token provided")
+        if (!Users.checkUser(subject)) throw RuntimeException("Bad friend")
         if (!Friends.areFriends(user, subject)) {
             DatabaseController.call {
                 Friends.insert {
@@ -24,6 +25,7 @@ class FriendController {
     @DeleteMapping("/friends")
     fun removeFriend(@RequestParam subject: String, @RequestHeader(name = "Token") token: String?) {
         val user = token?.let { Sessions.checkToken(it) } ?: throw RuntimeException("No/Bad token provided")
+        if (!Users.checkUser(subject)) throw RuntimeException("Bad friend")
         if (Friends.areFriends(user, subject)) {
             DatabaseController.call {
                 Friends.deleteWhere { ((Friends.a eq user) and (Friends.b eq subject)) or

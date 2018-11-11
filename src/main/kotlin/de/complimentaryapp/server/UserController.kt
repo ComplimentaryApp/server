@@ -13,8 +13,6 @@ class UserController {
     fun create(@RequestParam username: String, @RequestParam firstName: String, @RequestParam lastName: String,
                  @RequestParam email: String, @RequestParam birth: String, @RequestParam gender: Char) {
         if (!Users.validDate(birth)) throw RuntimeException("Bad date")
-        if (!Regex("[a-zA-Z0-9+._\\%-+]{1,256}\\@[a-zA-Z0-9][a-zA-Z0-9-]{0,64}(.[a-zA-Z0-9][a-zA-Z0-9-]{0,25})+")
-                .matches(email)) throw RuntimeException("Bad email")
         DatabaseController.call {
             try {
                 Users.insert {

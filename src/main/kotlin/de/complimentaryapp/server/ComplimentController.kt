@@ -15,6 +15,7 @@ class ComplimentController {
     fun newMessage(@RequestParam subject: String, @RequestBody content: String,
                    @RequestHeader(name = "Token") token: String?) {
         val user = token?.let { Sessions.checkToken(it) } ?: throw RuntimeException("No/Bad token provided")
+        if (!Users.checkUser(subject)) throw RuntimeException("Bad friend")
         if (!Friends.areFriends(user, subject)) throw RuntimeException("Not friends")
         DatabaseController.call {
             Compliments.insert {
